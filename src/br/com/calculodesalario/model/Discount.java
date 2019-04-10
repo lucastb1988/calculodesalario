@@ -2,20 +2,20 @@ package br.com.calculodesalario.model;
 
 import java.math.BigDecimal;
 
-public class Desconto {
+public class Discount {
 
     private Integer id;
 
-    private BigDecimal valorDesconto;
+    private BigDecimal discountValue;
 
-    public Desconto() {
+    public Discount() {
 
     }
 
-    public Desconto(final Integer id, final BigDecimal valorDesconto) {
+    public Discount(final Integer id, final BigDecimal discountValue) {
         super();
         this.id = id;
-        this.valorDesconto = valorDesconto;
+        this.discountValue = discountValue;
     }
 
     public Integer getId() {
@@ -26,12 +26,12 @@ public class Desconto {
         this.id = id;
     }
 
-    public BigDecimal getValorDesconto() {
-        return valorDesconto;
+    public BigDecimal getDiscountValue() {
+        return discountValue;
     }
 
-    public void setValorDesconto(final BigDecimal valorDesconto) {
-        this.valorDesconto = valorDesconto;
+    public void setDiscountValue(final BigDecimal discountValue) {
+        this.discountValue = discountValue;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Desconto {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final Desconto other = (Desconto) obj;
+        final Discount other = (Discount) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -61,6 +61,6 @@ public class Desconto {
 
     @Override
     public String toString() {
-        return "Descontos [id = " + id + ", valorDesconto = " + valorDesconto + "]";
+        return "Discount [id=" + id + ", discountValue=" + discountValue + "]";
     }
 }

@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import br.com.calculodesalario.exceptions.InfraEstruturaException;
+import br.com.calculodesalario.exceptions.InfrastructureException;
 
 public class DaoUtil {
 
@@ -13,10 +13,10 @@ public class DaoUtil {
 
     }
 
-    public static void closeConnection(final Connection connection, final PreparedStatement ps, final ResultSet rs) {
+    public static void closeConnection(final Connection connection, final PreparedStatement ps, final ResultSet rs)
+                    throws InfrastructureException {
 
         try {
-
             if (connection != null) {
                 connection.close();
             }
@@ -30,8 +30,7 @@ public class DaoUtil {
             }
 
         } catch (final SQLException e) {
-            e.getMessage();
-            throw new InfraEstruturaException("Erro ao tentar executar operações no banco de dados!");
+            throw new InfrastructureException("Error to execute database operations!", e);
         }
     }
 }
