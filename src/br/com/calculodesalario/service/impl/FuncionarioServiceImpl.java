@@ -6,56 +6,60 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import br.com.calculodesalario.dao.DescontoDao;
 import br.com.calculodesalario.dao.FuncionarioDao;
-import br.com.calculodesalario.dao.impl.DescontoDaoImpl;
 import br.com.calculodesalario.dao.impl.FuncionarioDaoImpl;
 import br.com.calculodesalario.exceptions.ValidacaoException;
 import br.com.calculodesalario.model.Desconto;
 import br.com.calculodesalario.model.Funcionario;
+import br.com.calculodesalario.service.DescontoService;
 import br.com.calculodesalario.service.FuncionarioService;
 
 public class FuncionarioServiceImpl implements FuncionarioService {
 
-	FuncionarioDao funcionarioDao = new FuncionarioDaoImpl();
-	DescontoDao descontoDao = new DescontoDaoImpl();
+    FuncionarioDao funcionarioDao = new FuncionarioDaoImpl();
+    DescontoService descontoService = new DescontoServiceImpl();
 
-	@Override
-	public List<Funcionario> calculoSalarioLiquido() {
-		List<Funcionario> listaFuncionariosCalculados = new ArrayList<>();
+    @Override
+    public List<Funcionario> calculoSalarioLiquido() {
+        final List<Funcionario> listaFuncionariosCalculados = new ArrayList<>();
 
-		List<Funcionario> funcionarios = funcionarioDao.listar();
-		
-		if (funcionarios == null || funcionarios.isEmpty()) {
-			throw new ValidacaoException("Não foram encontrados funcionários para cálculo!");
-		}
-		
-		BigDecimal somaDesconto = new BigDecimal(0);
-		for (Funcionario funcionario : funcionarios) {
-			
-			List<Desconto> descontos = descontoDao.buscarDescontosPorIdFuncionario(funcionario.getId());
-			for (Desconto desconto : descontos) {
-				somaDesconto = desconto.getValorDesconto().add(somaDesconto);
-			}
-			
-			BigDecimal salarioLiquido = funcionario.getSalarioBruto().subtract(somaDesconto);
-			funcionario.setSalarioLiquido(salarioLiquido);
-			
-			listaFuncionariosCalculados.add(funcionario);
-		}
-		
-		comparatorSalarioLiquidoDescendente(listaFuncionariosCalculados);
-		
-		return listaFuncionariosCalculados;
-	}
+        final List<Funcionario> funcionarios = listarFuncionarios();
 
-	private void comparatorSalarioLiquidoDescendente(List<Funcionario> listaFuncionariosCalculados) {
-		Collections.sort(listaFuncionariosCalculados, new Comparator<Funcionario>() {
+        BigDecimal somaDesconto = new BigDecimal(0);
+        for (final Funcionario funcionario : funcionarios) {
 
-			@Override
-			public int compare(Funcionario o1, Funcionario o2) {
-				return o2.getSalarioLiquido().compareTo(o1.getSalarioLiquido());
-			}
-		});
-	}
+            final List<Desconto> descontos = descontoService.buscarDescontosPorIdFuncionario(funcionario.getId());
+            for (final Desconto desconto : descontos) {
+                somaDesconto = desconto.getValorDesconto().add(somaDesconto);
+            }
+
+            final BigDecimal salarioLiquido = funcionario.getSalarioBruto().subtract(somaDesconto);
+            funcionario.setSalarioLiquido(salarioLiquido);
+
+            listaFuncionariosCalculados.add(funcionario);
+        }
+
+        comparatorSalarioLiquidoDescendente(listaFuncionariosCalculados);
+
+        return listaFuncionariosCalculados;
+    }
+
+    private List<Funcionario> listarFuncionarios() {
+        final List<Funcionario> funcionarios = funcionarioDao.listar();
+
+        if (funcionarios == null || funcionarios.isEmpty()) {
+            throw new ValidacaoException("Não foram encontrados funcionários para cálculo!");
+        }
+        return funcionarios;
+    }
+
+    private void comparatorSalarioLiquidoDescendente(final List<Funcionario> listaFuncionariosCalculados) {
+        Collections.sort(listaFuncionariosCalculados, new Comparator<Funcionario>() {
+
+            @Override
+            public int compare(final Funcionario o1, final Funcionario o2) {
+                return o2.getSalarioLiquido().compareTo(o1.getSalarioLiquido());
+            }
+        });
+    }
 }

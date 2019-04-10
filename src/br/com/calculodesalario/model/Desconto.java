@@ -3,64 +3,64 @@ package br.com.calculodesalario.model;
 import java.math.BigDecimal;
 
 public class Desconto {
-	
-	private Integer id;
-	
-	private BigDecimal valorDesconto;
-	
-	public Desconto() {
-		
-	}
 
-	public Desconto(Integer id, BigDecimal valorDesconto) {
-		super();
-		this.id = id;
-		this.valorDesconto = valorDesconto;
-	}
+    private Integer id;
 
-	public Integer getId() {
-		return id;
-	}
+    private BigDecimal valorDesconto;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Desconto() {
 
-	public BigDecimal getValorDesconto() {
-		return valorDesconto;
-	}
+    }
 
-	public void setValorDesconto(BigDecimal valorDesconto) {
-		this.valorDesconto = valorDesconto;
-	}
+    public Desconto(final Integer id, final BigDecimal valorDesconto) {
+        super();
+        this.id = id;
+        this.valorDesconto = valorDesconto;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Desconto other = (Desconto) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+    public void setId(final Integer id) {
+        this.id = id;
+    }
 
-	@Override
-	public String toString() {
-		return "Descontos [id = " + id + ", valorDesconto = " + valorDesconto + "]";
-	}
+    public BigDecimal getValorDesconto() {
+        return valorDesconto;
+    }
+
+    public void setValorDesconto(final BigDecimal valorDesconto) {
+        this.valorDesconto = valorDesconto;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final Desconto other = (Desconto) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Descontos [id = " + id + ", valorDesconto = " + valorDesconto + "]";
+    }
 }

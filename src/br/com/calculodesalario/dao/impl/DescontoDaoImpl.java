@@ -8,46 +8,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.calculodesalario.dao.DescontoDao;
+import br.com.calculodesalario.exceptions.InfraEstruturaException;
 import br.com.calculodesalario.factory.ConnectionFactory;
 import br.com.calculodesalario.model.Desconto;
+import br.com.calculodesalario.util.DaoUtil;
 
 public class DescontoDaoImpl implements DescontoDao {
 
-	private Connection connection;
+    @Override
+    public List<Desconto> buscarDescontosPorIdFuncionario(final Integer idFuncionario) {
 
-	public DescontoDaoImpl() {
-		this.connection = new ConnectionFactory().getConnection();
-	}
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        final List<Desconto> listaDesconto = new ArrayList<>();
 
-	@Override
-	public List<Desconto> buscarDescontosPorIdFuncionario(Integer idFuncionario) {
+        try {
+            connection = new ConnectionFactory().getConnection();
+            ps = connection.prepareStatement("select d.idDesconto, d.valorDesconto from desconto d "
+                + "join funcionario f on d.idFuncionario = f.idFuncionario where d.idFuncionario = ?");
 
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		List<Desconto> listaDesconto = new ArrayList<Desconto>();
+            ps.setInt(1, idFuncionario);
+            rs = ps.executeQuery();
 
-		try {
-			ps = connection.prepareStatement("select idDesconto, valorDesconto from desconto where idFuncionario = ?");
-			ps.setInt(1, idFuncionario);
-			rs = ps.executeQuery();
-			
-			while (rs.next()) {
-				buildEntity(rs, listaDesconto);
-			}
+            while (rs.next()) {
+                buildEntity(rs, listaDesconto);
+            }
 
-		} catch (SQLException e) {
-			e.getMessage();
-			throw new RuntimeException();
-		} 
+        } catch (final SQLException e) {
+            e.getMessage();
+            throw new InfraEstruturaException("Erro ao tentar executar operações no banco de dados!");
+        } finally {
+            DaoUtil.closeConnection(connection, ps, rs);
+        }
 
-		return listaDesconto;
-	}
+        return listaDesconto;
+    }
 
-	private void buildEntity(ResultSet rs, List<Desconto> listaDesconto) throws SQLException {
-		Desconto desconto = new Desconto();
-		desconto.setId(rs.getInt("idDesconto"));
-		desconto.setValorDesconto(rs.getBigDecimal("valorDesconto"));
-		
-		listaDesconto.add(desconto);
-	}
+    private void buildEntity(final ResultSet rs, final List<Desconto> listaDesconto) throws SQLException {
+        final Desconto desconto = new Desconto();
+        desconto.setId(rs.getInt("idDesconto"));
+        desconto.setValorDesconto(rs.getBigDecimal("valorDesconto"));
+
+        listaDesconto.add(desconto);
+    }
 }
